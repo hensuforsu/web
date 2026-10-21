@@ -7,17 +7,17 @@ let isDrawing = false;
 
 // 펜 기본 스타일 설정 함수
 function setPenStyle() {
-    ctx.strokeStyle = '#000000'; // 펜 색상
-    ctx.lineWidth = 2;           // 펜 두께
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 }
 
-// 2. 캔버스 해상도 맞춰주기 및 필기 데이터 복원 함수 (핵심)
+// 2. 캔버스 해상도 맞춤 및 기존 필기 백업/복원 함수
 function initCanvasSize() {
     if (!container || !canvas) return;
 
-    // A. 기존 필기 데이터가 있다면 메모리에 백업
+    // A. 기존 필기 데이터가 있다면 임시 백업
     let tempImageData = null;
     if (canvas.width > 0 && canvas.height > 0) {
         try {
@@ -27,40 +27,33 @@ function initCanvasSize() {
         }
     }
 
-    // B. 캔버스 해상도를 부모 박스 크기에 맞춰 새로 설정 (이 시점에 도화지가 리셋됨)
+    // B. 캔버스 해상도를 부모 박스 크기에 새로 맞춤 (크기 동기화)
     canvas.width = container.offsetWidth;
     canvas.height = container.offsetHeight;
 
-    // C. 리셋된 펜 스타일 재설정
+    // C. 캔버스 크기가 바뀌면 펜 설정이 초기화되므로 재설정
     setPenStyle();
 
-    // D. 백업해둔 필기 데이터가 있다면 새 도화지 위에 다시 찍어 복원
+    // D. 백업해둔 필기 데이터가 있다면 다시 복원
     if (tempImageData) {
         ctx.putImageData(tempImageData, 0, 0);
     }
 }
 
-// 초기화 실행 및 렌더링 시차 대응
+// 초기화 실행 및 화면 크기 변경 감지
 initCanvasSize();
 window.addEventListener('load', () => setTimeout(initCanvasSize, 100));
 
-// 3. 스크롤/상단바 유동 시 지워짐 방지 (가로 폭이 30px 이상 확실히 변했을 때만 실행)
+// 스크롤 시 사파리 주소창 유동 문제 대응 (가로 폭이 실제로 변할 때만 리사이즈)
 let lastWidth = window.innerWidth;
-let resizeTimer = null;
-
 window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    
-    resizeTimer = setTimeout(() => {
-        // 미세한 스크롤바 생성이나 주소창 변동은 무시하고, 실제 브라우저 가로 폭이 변했을 때만 동작
-        if (Math.abs(window.innerWidth - lastWidth) > 30) {
-            lastWidth = window.innerWidth;
-            initCanvasSize();
-        }
-    }, 200);
+    if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        initCanvasSize();
+    }
 });
 
-// 4. 마우스 / 터치 통합 좌표 정밀 계산 함수
+// 3. 마우스 / 터치 통합 좌표 정밀 계산 함수
 function getPos(e) {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
@@ -75,7 +68,7 @@ function getPos(e) {
     };
 }
 
-// 5. 그리기 동작 함수들
+// 4. 그리기 동작 함수들
 function startDrawing(e) {
     isDrawing = true;
     const pos = getPos(e);
@@ -94,13 +87,13 @@ function stopDrawing() {
     isDrawing = false;
 }
 
-// 6. 마우스 이벤트 연결 (PC)
+// 5. 마우스 이벤트 연결
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', stopDrawing);
 canvas.addEventListener('mouseleave', stopDrawing);
 
-// 7. 터치 이벤트 연결 (태블릿 / 모바일)
+// 6. 태블릿/모바일 터치 이벤트 연결
 canvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
     startDrawing(e);
@@ -116,7 +109,7 @@ canvas.addEventListener('touchend', (e) => {
     stopDrawing();
 }, { passive: false });
 
-// 8. 필기 전체 지우기 함수
+// 7. 지우기 함수
 function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
