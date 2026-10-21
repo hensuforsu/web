@@ -73,6 +73,7 @@ ul ul ul ul {
     padding-bottom: 1000px;
     margin-bottom: 10px;
     user-select: none;
+    touch-action: none;
 }
 
 .problem-content {

@@ -72,9 +72,20 @@ canvas.addEventListener('mouseup', stopDrawing);
 canvas.addEventListener('mouseleave', stopDrawing);
 
 // 8. 터치 이벤트 연결 (태블릿/모바일 지원)
-canvas.addEventListener('touchstart', startDrawing, { passive: false });
-canvas.addEventListener('touchmove', draw, { passive: false });
-canvas.addEventListener('touchend', stopDrawing);
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // 기본 터치 동작(스크롤, 줌 등) 차단
+    startDrawing(e);
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault(); // 기본 터치 동작 차단
+    draw(e);
+}, { passive: false });
+
+canvas.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    stopDrawing();
+}, { passive: false });
 
 // 9. 필기 지우기 함수
 function clearCanvas() {
