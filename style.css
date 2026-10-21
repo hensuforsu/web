@@ -76,14 +76,6 @@ ul ul ul ul {
     touch-action: none;
 }
 
-.problem-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 20px;
-    pointer-events: none;
-}
-
 #paintCanvas {
     position: absolute;
     top: 0;
