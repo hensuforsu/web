@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.44/dist/katex.min.css"
+        integrity="sha384-irXK0JiCGinqGL+slwVklbhJetrjczNwaP2lANewD8lKAs9n61SbQ3As28iSqXUE" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.44/dist/katex.min.js"
+        integrity="sha384-m/s9umSlhJbqEdA/j7pQVdGCMx2fHf7GXtgCVhNGOwLuu+1qJQES5AzIE8pn3nKQ"
+        crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.44/dist/contrib/auto-render.min.js"
+        integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            font-size: 30px;
+            padding: 50px;
+        }
+
+        .difficulty {
+            font-size: 30px;
+            color: #888888;
+            font-weight: normal;
+            margin-left: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h2 style="margin-bottom: 30px">
+        예시문항 1
+        <span class="difficulty">난이도: 4/10</span>
+    </h2>
+
+    <p style="margin-bottom: 30px">
+        \(1 < n < 10\)인 자연수 \(n\)에 대하여 \(n^{2} - 5n - 6\)의 \(n\)제곱근 중에 음의 실수가 존재하도록 하는 모든 \(n\)의 값의 합을 구하시오.
+    </p>
+
+    <div style="display: flex; gap: 10px">
+        <input id="input" type="number" min="0" max="999" placeholder="답안" required>
+        <button onclick="checkAnswer();">제출하기</button>
+        <button id="toggle" onclick="toggleExplanation();">해설 보기</button>    
+    </div>
+    <p id="output" style="margin-bottom: 30px"></p>
+
+    <div id="explanation" class="hidden">
+        <h2 style="margin-bottom: 30px;">
+            해설
+        </h2>
+
+        <p>
+            \(n^{2} - 5n - 6\)의 \(n\)제곱근의 값을 \(x\)라 하면, \(x\)는 방정식 \(x^{n} = n^{2} - 5n - 6\)의 근이다.
+            이는 곧 \(y = x^{n}\)의 그래프와 \(y = n^{2} - 5n - 6\)의 그래프의 교점의 \(x\)좌표를 가리킨다.
+            또한 \(y = n^{2} - 5n - 6\)은 \(n\)의 값이 정해짐에 따라 \(y = t\) 꼴의 상수함수가 됨을 알 수 있다.
+            \(y = x^{n}\)의 그래프의 개형은 \(n\)이 홀수인지 짝수인지에 따라 달라지므로 다음과 같이 경우를 나눈다.<br> <br>
+            \(i\). \(n\)이 홀수일 때 \(\\\) <br>
+            \(y = x^{n}\)의 그래프의 개형은 다음과 같다. <br>
+            <img src="odd.svg" width="40%"> <br>
+            따라서 상수함수 \(y = n^{2} - 5n - 6\)이 \(x\)축 아래에 있을 때, 즉 \(n^{2} - 5n - 6 < 0\)일 때 교점의 \(x\)좌표가 음의 실수가 된다. <br>
+            \(n^{2} - 5n - 6 < 0\) <br>
+            \((n - 6)(n + 1) < 0\) <br>
+            \(-1 < n < 6\)이고 문제 조건에 의해 <br>
+            \(\therefore 1 < n < 6\) <br>
+            따라서 이를 만족하는 홀수인 자연수 \(n\)의 값은 \(3\), \(5\)이다. <br> <br>
+            \(ii\). \(n\)이 짝수일 때 \(\\\) <br>
+            \(y = x^{n}\)의 그래프의 개형은 다음과 같다. <br>
+            <img src="even.svg" width="40%"> <br>
+            따라서 상수함수 \(y = n^{2} - 5n - 6\)이 \(x\)축 위에 있을 때, 즉 \(n^{2} - 5n - 6 > 0\)일 때 \(x\)좌표가 음의 실수인 교점이 존재한다. <br>
+            \(n^{2} - 5n - 6 > 0\) <br>
+            \((n - 6)(n + 1) > 0\) <br>
+            \(n < -1\) 또는 \(n > 6\)이고 문제 조건에 의해 <br>
+            \(\therefore 6 < n < 10\) <br>
+            따라서 이를 만족하는 짝수인 자연수 \(n\)의 값은 \(8\)이다. <br> <br>
+            \(i\), \(ii\)에 의하여 가능한 자연수 \(n\)의 값은 \(3\), \(5\), \(8\)이고 그 합은 \(16\)
+        </p>
+    </div>
+
+    <script>
+        function checkAnswer() {
+            const correctAnswer = 16;
+
+            const input = document.getElementById("input").value;
+            const output = document.getElementById("output");
+
+            if (parseInt(input) === correctAnswer) {
+                output.textContent = "정답입니다!";
+            } else {
+                output.textContent = "오답입니다!";
+            }
+        }
+
+        function toggleExplanation() {
+            const button = document.getElementById("toggle");
+            const text = document.getElementById("explanation");
+
+            text.classList.toggle("hidden");
+
+            if (text.classList.contains("hidden")) {
+                button.textContent = "해설 보기";
+            } else {
+                button.textContent = "해설 닫기";
+            }
+        }
+    </script>
+</body>
+
+</html>
