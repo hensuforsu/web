@@ -5,111 +5,109 @@ const ctx = canvas.getContext('2d');
 
 let isDrawing = false;
 
-// 펜 기본 스타일 설정 함수
-function setPenStyle() {
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
+// 그려진 모든 선(획) 데이터를 저장하는 배열
+// 구조: [ { points: [{x, y}, ...], color: '#000000', width: 2 }, ... ]
+let strokes = [];
+let currentStroke = null;
+
+// 펜 스타일 적용 함수
+function setPenStyle(color = '#000000', width = 2) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
 }
 
-// 2. 캔버스 해상도 맞춤 및 기존 필기 백업/복원 함수
-function initCanvasSize() {
-    if (!container || !canvas) return;
+// 2. 전체 필기 다시 그리기 함수
+function redrawAll() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // A. 기존 필기 데이터가 있다면 임시 백업
-    let tempImageData = null;
-    if (canvas.width > 0 && canvas.height > 0) {
-        try {
-            tempImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        } catch (e) {
-            console.log("백업할 필기 데이터가 없습니다.");
-        }
-    }
+  strokes.forEach(stroke => {
+    if (stroke.points.length < 1) return;
 
-    // B. 캔버스 해상도를 부모 박스 크기에 새로 맞춤 (크기 동기화)
-    canvas.width = container.offsetWidth;
-    canvas.height = container.offsetHeight;
-
-    // C. 캔버스 크기가 바뀌면 펜 설정이 초기화되므로 재설정
-    setPenStyle();
-
-    // D. 백업해둔 필기 데이터가 있다면 다시 복원
-    if (tempImageData) {
-        ctx.putImageData(tempImageData, 0, 0);
-    }
-}
-
-// 초기화 실행 및 화면 크기 변경 감지
-initCanvasSize();
-window.addEventListener('load', () => setTimeout(initCanvasSize, 100));
-
-// 스크롤 시 사파리 주소창 유동 문제 대응 (가로 폭이 실제로 변할 때만 리사이즈)
-let lastWidth = window.innerWidth;
-window.addEventListener('resize', () => {
-    if (window.innerWidth !== lastWidth) {
-        lastWidth = window.innerWidth;
-        initCanvasSize();
-    }
-});
-
-// 3. 마우스 / 터치 통합 좌표 정밀 계산 함수
-function getPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-    return {
-        x: (clientX - rect.left) * scaleX,
-        y: (clientY - rect.top) * scaleY
-    };
-}
-
-// 4. 그리기 동작 함수들
-function startDrawing(e) {
-    isDrawing = true;
-    const pos = getPos(e);
+    setPenStyle(stroke.color, stroke.width);
     ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
+    ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+
+    for (let i = 1; i < stroke.points.length; i++) {
+      ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
+    }
+    ctx.stroke();
+  });
+}
+
+// 3. 캔버스 크기 맞춤 (크기 변경 시 좌표 데이터로 다시 그림)
+function initCanvasSize() {
+  if (!container || !canvas) return;
+
+  canvas.width = container.offsetWidth;
+  canvas.height = container.offsetHeight;
+
+  // 크기 변경 후 데이터 기반 재그리기 (뭉개짐 원천 차단)
+  redrawAll();
+}
+
+// 부모 요소 크기 변화 감지
+const resizeObserver = new ResizeObserver(() => initCanvasSize());
+if (container) resizeObserver.observe(container);
+
+// 4. 좌표 계산 함수
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+
+  return {
+    x: (e.clientX - rect.left) * scaleX,
+    y: (e.clientY - rect.top) * scaleY
+  };
+}
+
+// 5. 그리기 동작 (선 좌표 수집)
+function startDrawing(e) {
+  isDrawing = true;
+  canvas.setPointerCapture(e.pointerId);
+
+  const pos = getPos(e);
+  
+  // 새로운 획 생성
+  currentStroke = {
+    color: '#000000',
+    width: 2,
+    points: [pos]
+  };
+  strokes.push(currentStroke);
+
+  setPenStyle(currentStroke.color, currentStroke.width);
+  ctx.beginPath();
+  ctx.moveTo(pos.x, pos.y);
 }
 
 function draw(e) {
-    if (!isDrawing) return;
-    const pos = getPos(e);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
+  if (!isDrawing || !currentStroke) return;
+
+  const pos = getPos(e);
+  currentStroke.points.push(pos); // 좌표 저장
+
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
 }
 
-function stopDrawing() {
-    isDrawing = false;
+function stopDrawing(e) {
+  if (!isDrawing) return;
+  isDrawing = false;
+  currentStroke = null;
+  canvas.releasePointerCapture(e.pointerId);
 }
 
-// 5. 마우스 이벤트 연결
-canvas.addEventListener('mousedown', startDrawing);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseup', stopDrawing);
-canvas.addEventListener('mouseleave', stopDrawing);
+// 6. 포인터 이벤트 연결
+canvas.addEventListener('pointerdown', startDrawing);
+canvas.addEventListener('pointermove', draw);
+canvas.addEventListener('pointerup', stopDrawing);
+canvas.addEventListener('pointercancel', stopDrawing);
 
-// 6. 태블릿/모바일 터치 이벤트 연결
-canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    startDrawing(e);
-}, { passive: false });
-
-canvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    draw(e);
-}, { passive: false });
-
-canvas.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    stopDrawing();
-}, { passive: false });
-
-// 7. 지우기 함수
+// 7. 지우기 함수 (데이터 배열 초기화 후 다시 그리기)
 function clearCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  strokes = [];
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
