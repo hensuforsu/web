@@ -29,15 +29,13 @@ ul ul ul ul {
 .problem-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 30px;
+    gap: 20px;
 }
 
 #difficulty {
     font-size: 30px;
     color: #888888;
     font-weight: normal;
-    margin-left: 10px;
 }
 
 #input {
@@ -51,9 +49,9 @@ ul ul ul ul {
 }
 
 #output {
-    font-size: 25px;
+    font-size: 30px;
     font-weight: bold;
-    margin-left: 10px;
+    margin-left: 20px;
 }
 
 #submit {
@@ -69,9 +67,11 @@ ul ul ul ul {
     position: relative;
     width: auto;
     height: auto;
-    margin-right: 200px;
+    margin-right: 150px;
+    padding-left: 30px;
+    padding-top: 30px;
     padding-bottom: 1000px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     user-select: none;
     touch-action: none;
 }
@@ -83,6 +83,7 @@ ul ul ul ul {
     width: 100%;
     height: 100%;
     cursor: crosshair;
+    user-select: none;
     touch-action: none;
 }
 
