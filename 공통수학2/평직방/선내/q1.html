@@ -22,14 +22,13 @@
         <h2>문제 1</h2>
         <span id="difficulty">난이도: 하</span>
         <input id="input" type="number" min="0" max="999" placeholder="답안" required>
-        <button id="submit" onclick="checkAnswer(10);">제출하기</button>
+        <button id="submit" onclick="checkAnswer(13);">제출하기</button>
         <span id="output"></span>
     </div>
 
     <div class="problem-container">
-        <p style="margin-bottom: 30px;">
-            두 점 $\text{A}\left(2, -1\right)$, $\text{B}\left(5, 3\right)$에 대하여 선분 $\text{AB}$를 $1:2$로 내분하는 점 $\text{P}\left(x, y\right)$가 있다.
-            $3 \times \left(x + y\right)$의 값을 구하시오.
+        <p>
+            두 점 $\left(3, \, 5\right) \,$, $\left(1, \, 2\right)$ 사이의 거리는 $\sqrt{\smash[b]{p}} \,$이다. $p \,$의 값을 구하시오.
         </p>
         
         <canvas id="paintCanvas"></canvas>
@@ -38,20 +37,6 @@
     <div class="canvas-controls">
         <button onclick="clearCanvas();">필기 지우기</button>
     </div>
-
-    <!-- <div class="example-box">
-        <div class="example-title">[보 기]</div>
-        <div class="example-content">
-            ㄱ. $a > 0$ 이면 $a^2 > 0$ 이다.<br>
-            ㄴ. 동억맘 <br>
-            ㄷ. 내꺼
-        </div>
-    </div>
-
-    <p>
-        ① ㄴ, ㄷ <br>
-        ② ㄱ, ㄴ, ㄷ
-    </p> -->
 </body>
 
 </html>

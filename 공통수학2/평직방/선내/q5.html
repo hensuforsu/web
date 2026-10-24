@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.css" integrity="sha384-3rdsX6e5mueWyoweR9NIVmtEsUkokpBT/0ALqKKIBMr9j4qhHkaIkAcGgsE6uVlp" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.js" integrity="sha384-QFFtAGzvvj+bfgCGxXJlNZZR1nXEZgvG8tDLCCY1F19xl20WlfTYgguB4VcNdxYk" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"></script>
+    <script defer src="../../../katex-init.js"></script>
+
+    <link rel="stylesheet" href="../../../style.css">
+
+    <script defer src="../../../checkAnswer.js"></script>
+    <script defer src="../../../paint.js"></script>
+</head>
+
+<body>
+    <div class="problem-header">
+        <h2>문제 5</h2>
+        <span id="difficulty">난이도: 중</span>
+        <input id="input" type="number" min="0" max="999" placeholder="답안" required>
+        <button id="submit" onclick="checkAnswer(8);">제출하기</button>
+        <span id="output"></span>
+    </div>
+
+    <div class="problem-container">
+        <p>
+            두 점 $\text{A}\left(-\dfrac{3}{4}, \, p\right) \,$, $\text{B}\left(q, \, 0\right) \,$에 대하여 선분 $\text{AB} \,$를 $3 : 1 \,$로 내분하는 점 $\text{H} \,$가 $y \,$축 위에 있다.
+            삼각형 $\text{OBH} \,$의 넓이가 $32 \,$일 때, $\dfrac{q}{p} \,$의 값을 구하시오. (단, $\text{O} \,$는 원점이다.)
+        </p>
+        
+        <canvas id="paintCanvas"></canvas>
+    </div>
+
+    <div class="canvas-controls">
+        <button onclick="clearCanvas();">필기 지우기</button>
+    </div>
+</body>
+
+</html>

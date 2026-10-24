@@ -48,12 +48,6 @@ ul ul ul ul {
     border-radius: 10px;
 }
 
-#output {
-    font-size: 30px;
-    font-weight: bold;
-    margin-left: 20px;
-}
-
 #submit {
     width: 120px;
     height: 30px;
@@ -61,6 +55,12 @@ ul ul ul ul {
     border: 1px solid #000000;
     border-radius: 10px;
     background-color: #E2E2E2;
+}
+
+#output {
+    font-size: 30px;
+    font-weight: bold;
+    margin-left: 20px;
 }
 
 .problem-container {
@@ -73,6 +73,15 @@ ul ul ul ul {
     padding-top: 7.5px;
     padding-bottom: 1000px;
     margin-bottom: 20px;
+
+    /* 표준 */
+    user-select: none;
+    touch-action: none;
+
+    /* 모바일 태블릿 */
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 #paintCanvas {
@@ -82,21 +91,6 @@ ul ul ul ul {
     width: 100%;
     height: 100%;
     cursor: crosshair;
-}
-
-.problem-container, #paintCanvas {
-  /* 1. 텍스트 및 요소 선택 방지 (웹킷 벤더 프리픽스 필수) */
-  -webkit-user-select: none;
-  user-select: none;
-
-  /* 2. 아이패드에서 길게 눌렀을 때 팝업 메뉴(복사/찾아보기 등) 뜨는 현상 방지 */
-  -webkit-touch-callout: none;
-
-  /* 3. 터치했을 때 순간적으로 반짝이는 회색/파란색 하이라이트 제거 */
-  -webkit-tap-highlight-color: transparent;
-
-  /* 4. 터치 스크롤 및 브라우저 제스처 차단 */
-  touch-action: none;
 }
 
 .example-box {
