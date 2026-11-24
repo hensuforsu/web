@@ -8,3 +8,7 @@ function checkAnswer(correctAnswer) {
         output.textContent = "오답입니다!";
     }
 }
+
+document.addEventListener('dblclick', function(e) {
+    e.preventDefault();
+  }, { passive: false });
