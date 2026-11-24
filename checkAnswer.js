@@ -9,6 +9,7 @@ function checkAnswer(correctAnswer) {
     }
 }
 
-document.addEventListener('dblclick', function(e) {
-    e.preventDefault();
-  }, { passive: false });
+document.addEventListener('dblclick', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+});
