@@ -101,6 +101,7 @@ ul ul ul ul {
 }
 
 .example-title {
+    line-height: normal;
     font-weight: bold;
     font-size: 1.1em;
     margin-bottom: 10px;
